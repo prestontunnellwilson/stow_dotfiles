@@ -1,0 +1,13 @@
+[font]
+size = 14.0
+
+[font.normal]
+family = "CaskaydiaCove Nerd Font"
+
+[[keyboard.bindings]]
+action = "CreateNewWindow"
+key = "N"
+mods = "Command"
+
+[window]
+option_as_alt = "Both"
