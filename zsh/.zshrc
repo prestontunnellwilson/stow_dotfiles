@@ -31,3 +31,10 @@ export EDITOR="hx"
 GOV=$(asdf where golang)
 # export GOROOT="$GOV/go"
 export GOPATH="$HOME/go"
+
+# bun completions
+[ -s "/Users/prestontunnellwilson/.bun/_bun" ] && source "/Users/prestontunnellwilson/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
