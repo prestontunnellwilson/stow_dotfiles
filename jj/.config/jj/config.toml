@@ -9,3 +9,10 @@ push-bookmark-prefix = "ptw/push-"
 [user]
 name = "prestontunnellwilson"
 email = "prestontunnellwilson@users.noreply.github.com"
+
+[aliases]
+tug = ["bookmark", "move", "--from", "closest_bookmark(@)", "--to", "closest_pushable(@)"]
+
+[revset-aliases]
+'closest_bookmark(to)' = 'heads(ancestors(to) & bookmarks())'
+'closest_pushable(to)' = 'heads(ancestors(to) & mutable() & ~description(exact:"") & (~empty() | merges()))'
