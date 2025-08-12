@@ -153,6 +153,14 @@ automatically-unhide-macos-hidden-apps = false
     if.app-id = 'com.spotify.client'
     run = 'move-node-to-workspace S'
 
+[[on-window-detected]]
+    if.app-id = 'com.tinyspeck.slackmacgap'
+    run = 'move-node-to-workspace M'
+
+[[on-window-detected]]
+    if.app-id = 'com.microsoft.VSCode'
+    run = 'move-node-to-workspace 8'
+
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
