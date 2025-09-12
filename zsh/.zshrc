@@ -38,3 +38,4 @@ export GOPATH="$HOME/go"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+export PGDATA="$HOME/workspace/pgsql/data"
