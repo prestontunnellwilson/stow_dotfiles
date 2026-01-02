@@ -3,8 +3,8 @@
 [ui]
 default-command = "log"
 
-[git]
-push-bookmark-prefix = "ptw/push-"
+[templates]
+git_push_bookmark = '"ptw/push-" ++ change_id.short()'
 
 [user]
 name = "prestontunnellwilson"
