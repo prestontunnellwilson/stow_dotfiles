@@ -24,11 +24,11 @@ setopt HIST_IGNORE_DUPS
 alias ls='gls --color=auto --group-directories-first'
 
 eval "$(starship init zsh)"
-export ASDF_DATA_DIR="$HOME/.asdf"
-export PATH="$ASDF_DATA_DIR/shims:$PATH:$HOME/go/bin"
+# export ASDF_DATA_DIR="$HOME/.asdf"
+# export PATH="$ASDF_DATA_DIR/shims:$PATH:$HOME/go/bin"
 export EDITOR="hx"
 
-GOV=$(asdf where golang)
+# GOV=$(asdf where golang)
 # export GOROOT="$GOV/go"
 export GOPATH="$HOME/go"
 
