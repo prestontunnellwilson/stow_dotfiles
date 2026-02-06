@@ -58,4 +58,4 @@ brew "watchexec"
 # Internet file retriever
 brew "wget"
 # AeroSpace is an i3-like tiling window manager for macOS
-cask "aerospace"
+cask "nikitabobko/tap/aerospace"
