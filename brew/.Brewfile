@@ -10,8 +10,6 @@ tap "nikitabobko/tap"
 # InStride dependencies
 # -----------
 
-# Extendable version manager with support for Ruby, Node.js, Erlang & more
-brew "asdf"
 # Official Amazon AWS command-line interface
 brew "awscli"
 # Dependency manager for Cocoa projects
@@ -20,6 +18,12 @@ brew "cocoapods"
 brew "jq"
 # ISO/IEC 23008-12:2017 HEIF file format decoder and encoder
 brew "libheif"
+# Polyglot runtime manager (asdf rust clone)
+brew "mise"
+# Package compiler and linker metadata toolkit
+brew "pkgconf"
+# Fast, disk space efficient package manager
+brew "pnpm"
 # Tool for managing OCI containers and pods
 brew "podman"
 # Alternative to docker-compose using podman
