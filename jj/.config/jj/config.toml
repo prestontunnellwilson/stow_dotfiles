@@ -2,8 +2,7 @@
 
 [ui]
 default-command = "log"
-pager = "delta"
-diff-formatter = ":git"
+diff-formatter = ["difft", "--color=always", "$left", "$right"]
 
 [templates]
 git_push_bookmark = '"ptw/push-" ++ change_id.short()'
