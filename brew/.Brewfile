@@ -28,12 +28,10 @@ brew "pnpm"
 brew "podman"
 # Alternative to docker-compose using podman
 brew "podman-compose"
-# Object-relational database system
-brew "postgresql@14"
 # Framework for managing multi-language pre-commit hooks
 brew "pre-commit"
-# Persistent key-value database, with built-in net interface
-brew "redis", restart_service: :changed
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.10"
 # GraphQL IDE for better development workflows
 cask "graphql-playground"
 
