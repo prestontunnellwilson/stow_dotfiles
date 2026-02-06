@@ -43,6 +43,8 @@ cask "graphql-playground"
 brew "atuin"
 # GNU File, Shell, and Text utilities
 brew "coreutils"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
 # Command-line benchmarking tool
 brew "hyperfine"
 # Git-compatible distributed version control system

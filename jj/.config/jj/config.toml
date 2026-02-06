@@ -2,6 +2,8 @@
 
 [ui]
 default-command = "log"
+pager = "delta"
+diff-formatter = ":git"
 
 [templates]
 git_push_bookmark = '"ptw/push-" ++ change_id.short()'
