@@ -59,3 +59,5 @@ brew "watchexec"
 brew "wget"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "nikitabobko/tap/aerospace"
+# Brings the power of Copilot coding agent directly to your terminal
+cask "copilot-cli"
