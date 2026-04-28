@@ -32,8 +32,10 @@
     "dock": "right"
   },
   "agent": {
+    "tool_permissions": {
+      "default": "allow"
+    },
     "dock": "left",
-    "always_allow_tool_actions": true,
     "default_model": {
       "enable_thinking": true,
       "provider": "openai",
