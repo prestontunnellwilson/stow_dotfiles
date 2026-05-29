@@ -18,6 +18,10 @@ tug = ["bookmark", "move", "--from", "closest_bookmark(@)", "--to", "closest_pus
 'closest_bookmark(to)' = 'heads(ancestors(to) & bookmarks())'
 'closest_pushable(to)' = 'heads(ancestors(to) & mutable() & ~description(exact:"") & (~empty() | merges()))'
 
+'pending_anchors()' = 'mine() & main@origin.. & remote_bookmarks(remote=origin).. & ~empty()'
+'pending_stack()' = '::pending_anchors() & main@origin.. & remote_bookmarks(remote=origin)..' 
+'pending()' = 'pending_stack() | (roots(pending_stack())- & ::main@origin)'
+
 [template-aliases]
 'format_short_signature(signature)' = '''
 coalesce(signature.email().local(), email_placeholder)'''
