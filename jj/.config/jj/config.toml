@@ -13,7 +13,7 @@ email = "prestontunnellwilson@users.noreply.github.com"
 
 [aliases]
 tug = ["bookmark", "move", "--from", "closest_bookmark(@)", "--to", "closest_pushable(@)"]
-pr = ["diff", "--from", "heads(ancestors(@-) & bookmarks())", "--to", "@"]
+pr = ["diff", "--from", "latest(ancestors(@) & ancestors(trunk()), 1)", "--to", "@"]
 
 [revset-aliases]
 'closest_bookmark(to)' = 'heads(ancestors(to) & bookmarks())'
