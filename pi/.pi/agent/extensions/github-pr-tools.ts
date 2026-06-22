@@ -21,6 +21,7 @@ type PullRequestReview = {
   body?: string;
   submittedAt?: string;
   submitted_at?: string;
+  html_url?: string;
 };
 
 type InlineReviewComment = {
@@ -94,12 +95,37 @@ function formatIssueComment(comment: IssueComment): string {
   return `- ${login}: ${summary}${url ? `\n  ${url}` : ""}`;
 }
 
+function reviewLogin(review: PullRequestReview): string {
+  return review.user?.login ?? review.author?.login ?? "unknown";
+}
+
+function reviewSubmittedAt(review: PullRequestReview): string {
+  return review.submitted_at ?? review.submittedAt ?? "";
+}
+
+function indentBody(body: string): string {
+  return body
+    .trim()
+    .split(/\r?\n/)
+    .map((line) => `  ${line}`)
+    .join("\n");
+}
+
+function formatReviewBody(review: PullRequestReview): string {
+  const login = reviewLogin(review);
+  const state = review.state ?? "UNKNOWN";
+  const submittedAt = reviewSubmittedAt(review);
+  const url = review.html_url ?? "";
+  const header = `- ${login} (${state}${submittedAt ? ` at ${submittedAt}` : ""}):${url ? `\n  ${url}` : ""}`;
+  return `${header}\n${indentBody(review.body ?? "")}`;
+}
+
 export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "github_pr_review_context",
     label: "GitHub PR Review Context",
     description:
-      "Fetch complete review feedback for a pull request in InStride-Health/application, including PR metadata, issue comments, reviews, inline review comments, Copilot comments, and security/code scanning review comments. Input is just the PR number.",
+      "Fetch complete review feedback for a pull request in InStride-Health/application, including PR metadata, review body comments, issue comments, inline review comments, Copilot comments, and security/code scanning review comments. Input is just the PR number.",
     parameters: Type.Object({
       prNumber: Type.Number({ description: "Pull request number in InStride-Health/application" }),
     }),
@@ -134,6 +160,7 @@ export default function (pi: ExtensionAPI) {
       ]);
 
       const allReviews = reviews.length > 0 ? reviews : pr.reviews ?? [];
+      const reviewBodyComments = allReviews.filter((review) => (review.body ?? "").trim() !== "");
       const copilotInlineComments = inlineComments.filter((comment) => isCopilot(comment.user?.login));
       const securityInlineComments = inlineComments.filter((comment) => isSecurity(comment.user?.login));
       const otherInlineComments = inlineComments.filter(
@@ -148,10 +175,14 @@ export default function (pi: ExtensionAPI) {
         "",
         "Counts:",
         `- Reviews: ${allReviews.length}`,
+        `- Review body comments: ${reviewBodyComments.length}`,
         `- Issue comments: ${issueComments.length}`,
         `- Inline review comments: ${inlineComments.length}`,
         `- Security inline comments: ${securityInlineComments.length}`,
         `- Copilot inline comments: ${copilotInlineComments.length}`,
+        "",
+        "Review body comments:",
+        ...(reviewBodyComments.length > 0 ? reviewBodyComments.map(formatReviewBody) : ["- None found"]),
         "",
         "Security / CodeQL inline comments:",
         ...(securityInlineComments.length > 0 ? securityInlineComments.map(formatInlineComment) : ["- None found"]),
@@ -174,6 +205,7 @@ export default function (pi: ExtensionAPI) {
           reviews: allReviews,
           issueComments,
           inlineComments,
+          reviewBodyComments,
           copilotInlineComments,
           securityInlineComments,
         },
