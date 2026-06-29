@@ -165,6 +165,10 @@ automatically-unhide-macos-hidden-apps = false
     if.app-id = 'dev.zed.Zed'
     run = 'move-node-to-workspace 8'
 
+[[on-window-detected]]
+    if.app-id = 'com.brave.Browser'
+    run = 'move-node-to-workspace 1'
+
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
