@@ -14,6 +14,8 @@ email = "prestontunnellwilson@users.noreply.github.com"
 [aliases]
 tug = ["bookmark", "move", "--from", "closest_bookmark(@)", "--to", "closest_pushable(@)"]
 pr = ["diff", "--from", "latest(ancestors(@) & ancestors(trunk()), 1)", "--to", "@"]
+gf = ["git", "fetch"]
+gp = ["git", "push"]
 
 [revset-aliases]
 'closest_bookmark(to)' = 'heads(ancestors(to) & bookmarks())'
