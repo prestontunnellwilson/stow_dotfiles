@@ -20,7 +20,7 @@
     }
   },
   "project_panel": {
-    "dock": "left"
+    "dock": "right"
   },
   "outline_panel": {
     "dock": "left"
@@ -32,6 +32,7 @@
     "dock": "right"
   },
   "agent": {
+    "sidebar_side": "right",
     "tool_permissions": {
       "default": "allow"
     },
