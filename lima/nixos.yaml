@@ -5,8 +5,17 @@ images:
     arch: "aarch64"
     digest: "sha512:748c723b69dbdec40a9acaf78cc9070ae784dcb64b0856ab906efdac822d9abcc65565b8f8dfa4cf8b49cc6c12c372072e83bb5ed9247330a7c22675d9e141ce"
 
-# Only listed host directories are shared. Replace or remove this example.
+mountType: "virtiofs"
+
+# Only listed host directories are shared; nothing else is visible to the VM.
+# Project-specific mounts belong with that project's own copy of this file.
 mounts: []
+
+ssh:
+  # Lima picks a random host port for ssh on every start, which breaks anything
+  # that remembers a connection. Pin it so `Host lima-nix-dev` stays valid and
+  # editors and coding agents can reconnect over remote ssh.
+  localPort: 60022
 
 cpus: 5
 memory: 16GiB
@@ -19,6 +28,7 @@ portForwards:
     guestPort: 68
     guestIP: 0.0.0.0
     ignore: true
+  # Project-specific forwards belong with the project.
 
 containerd:
   system: false

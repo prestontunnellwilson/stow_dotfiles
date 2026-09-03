@@ -1,4 +1,8 @@
 # After editing this file, run `just apply` on the host.
+#
+# Language toolchains deliberately are not here: mise installs them per project
+# from a .tool-versions file, so the VM tracks whatever that project pins. See
+# programs.nix-ld in nixos-lima-config.nix for what makes those runnable.
 { pkgs, unstablePkgs }:
 with pkgs; [
   atuin
@@ -6,7 +10,6 @@ with pkgs; [
   unstablePkgs.codex
   difftastic
   ghostty.terminfo
-  git
   helix
   jujutsu
   mise
@@ -16,5 +19,10 @@ with pkgs; [
   stow
   watchexec
   zellij
-]
 
+  # General development tooling
+  gnupg # mise verifies the signatures on the tarballs it downloads
+  jq
+  shellcheck
+  unzip
+]

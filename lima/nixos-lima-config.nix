@@ -37,6 +37,35 @@
 
   programs.fish.enable = true;
   programs.starship.enable = true;
+  programs.git.enable = true;
+
+  # Language toolchains come from mise reading a project's .tool-versions, not
+  # from nixpkgs, so the VM tracks whatever versions that project pins. mise
+  # installs upstream release tarballs, which are dynamically linked against a
+  # normal FHS glibc, so nix-ld is what makes them runnable here. It is also what
+  # lets an editor's or coding agent's remote-ssh server run its bundled node.
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc.lib
+      zlib
+      openssl
+      curl
+      icu
+      libuuid
+    ];
+  };
+
+  environment.etc."mise/config.toml".text = ''
+    [settings]
+    # Single-user development VM: every mise config under /home is ours.
+    trusted_config_paths = ["/home"]
+    [settings.node]
+    # nix-ld makes upstream's prebuilt node runnable here, so take the tarball.
+    # Left to itself mise decides this host cannot run the prebuilt binary and
+    # spends the better part of an hour compiling node from source instead.
+    compile = false
+  '';
 
   # limactl shell forwards TERM with its pseudo-terminal, but not COLORTERM.
   # Declare the VM's true-color support so Helix uses its full default theme.
@@ -44,6 +73,14 @@
     COLORTERM = "truecolor";
     EDITOR = "hx";
     VISUAL = "hx";
+
+    # mise's shims work in non-interactive shells too, which `just` recipes,
+    # `limactl shell -- <cmd>` and remote-ssh tooling rely on. ~/.local/bin is
+    # where `corepack enable --install-directory` puts its shims, for projects
+    # that pin a package manager through package.json rather than through mise.
+    PATH = [ "$HOME/.local/share/mise/shims" "$HOME/.local/bin" ];
+
+    COREPACK_ENABLE_DOWNLOAD_PROMPT = "0";
   };
 
   # The Lima user already exists before this configuration is installed. Read
@@ -82,4 +119,3 @@
 
   system.stateVersion = "26.05";
 }
-
