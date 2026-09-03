@@ -1,0 +1,95 @@
+set dotenv-load := false
+
+instance := env_var_or_default("LIMA_INSTANCE", "nix-dev")
+guest_staging := "/tmp/nixos-lima-config"
+config_files := "flake.nix flake.lock nixos-lima-config.nix packages.nix"
+
+# Show the available VM workflows.
+default:
+    @just --list
+
+# Create and configure a new VM.
+create instance_name=instance:
+    limactl start --yes --name "{{ instance_name }}" ./nixos.yaml
+    just apply "{{ instance_name }}"
+
+# Copy the NixOS configuration into an existing VM and activate it on a reboot.
+[script]
+apply instance_name=instance:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    instance_name="{{ instance_name }}"
+    guest_staging="{{ guest_staging }}"
+    read -ra config_files <<< "{{ config_files }}"
+
+    if ! command -v limactl >/dev/null 2>&1; then
+      echo "error: limactl is not installed or is not on PATH" >&2
+      exit 1
+    fi
+
+    sources=()
+    for file in "${config_files[@]}"; do
+      if [[ ! -f "$file" ]]; then
+        echo "error: missing $PWD/$file" >&2
+        exit 1
+      fi
+      sources+=("$PWD/$file")
+    done
+
+    cleanup() {
+      limactl shell "$instance_name" -- rm -rf "$guest_staging" >/dev/null 2>&1 || true
+    }
+    trap cleanup EXIT
+
+    limactl shell "$instance_name" -- rm -rf "$guest_staging"
+    limactl shell "$instance_name" -- mkdir -p "$guest_staging"
+    limactl copy "${sources[@]}" "$instance_name:$guest_staging/"
+
+    limactl shell "$instance_name" -- sudo rm -rf /etc/nixos
+    limactl shell "$instance_name" -- sudo cp -R "$guest_staging" /etc/nixos
+    limactl shell "$instance_name" -- sudo nixos-rebuild boot \
+      --flake "/etc/nixos#nix-dev"
+    cleanup
+    trap - EXIT
+
+    limactl stop "$instance_name"
+    limactl edit "$instance_name" \
+      --set '.user.shell = "/run/current-system/sw/bin/fish"'
+    limactl start "$instance_name"
+    echo "NixOS is ready. Enter it with: just shell $instance_name"
+
+# Open an interactive shell in the VM.
+shell instance_name=instance:
+    limactl shell "{{ instance_name }}"
+
+# Edit an existing instance's Lima settings, then restart it.
+edit instance_name=instance:
+    limactl stop "{{ instance_name }}"
+    limactl edit "{{ instance_name }}"
+    limactl start "{{ instance_name }}"
+
+# Update flake.lock inside the VM and copy it back to the host.
+[script]
+update instance_name=instance:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    instance_name="{{ instance_name }}"
+    guest_staging="{{ guest_staging }}-update"
+
+    cleanup() {
+      limactl shell "$instance_name" -- rm -rf "$guest_staging" >/dev/null 2>&1 || true
+    }
+    trap cleanup EXIT
+
+    limactl shell "$instance_name" -- rm -rf "$guest_staging"
+    limactl shell "$instance_name" -- mkdir -p "$guest_staging"
+    limactl copy "$PWD/flake.nix" "$PWD/flake.lock" "$instance_name:$guest_staging/"
+    limactl shell "$instance_name" -- nix flake update --flake "$guest_staging"
+    limactl copy "$instance_name:$guest_staging/flake.lock" "$PWD/flake.lock"
+    cleanup
+    trap - EXIT
+
+    just apply "$instance_name"
+

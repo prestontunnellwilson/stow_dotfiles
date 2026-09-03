@@ -1,0 +1,11 @@
+# Ignore everything by default, opt-in specific files
+/*
+!/.gitignore
+!/README.md
+!/flake.lock
+!/flake.nix
+!/justfile
+!/nixos-lima-config.nix
+!/nixos.yaml
+!/packages.nix
+
