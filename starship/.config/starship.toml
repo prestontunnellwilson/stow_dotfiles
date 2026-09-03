@@ -1,2 +1,16 @@
+# Starship leaves the Jujutsu modules out of $all, so place them by the directory.
+format = "$username$hostname$directory$jj_bookmark$jj_change$jj_status$all"
+
+# jj keeps Git's HEAD detached, so only Git repos show a branch.
+[git_branch]
+only_attached = true
+
+[git_commit]
+disabled = true
+
+# In jj repos this repeats jj_status.
+[git_status]
+disabled = true
+
 [aws]
 disabled = true
