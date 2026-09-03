@@ -36,8 +36,7 @@ export GOPATH="$HOME/go"
 [ -s "/Users/prestontunnellwilson/.bun/_bun" ] && source "/Users/prestontunnellwilson/.bun/_bun"
 
 # bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 export PGDATA="$HOME/workspace/pgsql-podman-clean/data"
 eval "$(atuin init zsh)"
 
