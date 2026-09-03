@@ -16,6 +16,13 @@ tug = ["bookmark", "move", "--from", "closest_bookmark(@)", "--to", "closest_pus
 pr = ["diff", "--from", "latest(ancestors(@) & ancestors(trunk()), 1)", "--to", "@"]
 gf = ["git", "fetch"]
 gp = ["git", "push"]
+# Run pre-commit on the files changed in @. `--files` is required: without it
+# pre-commit stashes unstaged changes and tests the index, which in a jj
+# workspace sits at @- and would silently check the pre-change content.
+# set -f + IFS=newline: ~98 tracked files have spaces in their names.
+precommit = ["util", "exec", "--", "bash", "-c", '''set -f; IFS=$'\n'; pre-commit run --hook-stage pre-push --files $(jj diff --name-only -r @)''']
+# Re-point this worktree's git HEAD/index at @- after jj moves the working copy.
+sync-git = ["util", "exec", "--", "bash", "-c", '''git update-ref --no-deref HEAD "$(jj --ignore-working-copy log --no-graph -r @- -T commit_id)" && git reset -q''']
 
 [revset-aliases]
 'closest_bookmark(to)' = 'heads(ancestors(to) & bookmarks())'
